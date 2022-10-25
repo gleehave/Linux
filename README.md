@@ -2,6 +2,132 @@
 - 간단한 Linux 명령어만 정리한다.
 - shell script 환경에서 익숙해지려는 목적을 갖고, 당황스러움을 극복한다.
 
+## Shell Script
+#### Shebang
+- Shebang이 있는 스크립트는 프로그램으로 실행되면, 프로그램 Loader가 스크립트의 첫 줄 부분을 인터프리터 지시자로 구문을 분석한다.
+```
+#!/bin/bash
+#!/bin/csh
+#!/bin/zsh
+
+echo $(which zsh)
+/opt/homebrew/bin/zsh
+```
+
+#### 변수선언
+- "로컬변수"와 "환경변수(전역)"이 존재한다.
+- 값을 사용할 때는 변수명 앞에 특수문자 "$"를 사용한다. (e.g., echo ${data})
+- 값을 대입할 때는 특수문자 "$"를 사용하지 않는다. (e.g., data=mac)
+
+**환경변수**
+```
+$0 : 실행된 쉘 스크립트 파일명
+$# : 스크립트에 전달된 인자의 개수
+$$ : 쉘 스크립트의 PID
+```
+- $1, $2, $3, $n ... : 넘겨진 인자의 값
+- $* 또는 $@ : 전달된 인자들을 모아놓은 문자열
+```
+#!/bin/bash
+
+echo "Args 1: $1"
+echo "Args 2: $2"
+echo "Args 3: $3"
+
+echo "Args List \$@: $@"
+echo "Args List \$*: $*"
+```
+
+#### 산술연산
+```
+#!/bin/bash
+
+number1 = 10
+number2 = 20
+
+plus = `expr $number1 + $number2`
+minus = `expr $number1 - $number2`
+mul = `expr $number1 \* $number2`
+div = `expr $number1 / $number2`
+rem = `expr $number2 % $number2`
+
+echo "plus: ${plus}"
+echo "minus: ${minus}"
+echo "mul: ${mul}"
+echo "div: ${div}"
+echo "rem: ${rem}"
+```
+
+#### 조건문
+- if문 뒤에 나오는 [ ] 사이에는 공백이 존재해야한다.
+```
+if [ 값1 조건식 값2 ]; then
+    수행
+fi
+```
+```
+#!/bin/bash
+num1 = 10
+num2 = 10
+
+if [ ${num1} -eq ${num2} ]; then
+    echo "변수의 값이 같습니다."
+fi
+```
+```
+[ -z ${변수} ]  # 변수의 문자열 길이가 0이면 True
+[ -n ${변수} ]  # 변수의 문자열 길이가 0이 아니면 True
+[ ${변수1} -eq ${변수2} ]  # 변수1과 변수2의 값이 같으면 True
+[ ${변수1} -ne ${변수2} ]  # 변수1과 변수2의 값이 다르면 True
+[ ${변수1} -gt ${변수2} ]  # 변수1의 값이 변수2의 값 보다 크면 True
+[ ${변수1} -ge ${변수2} ]  # 변수1의 값이 변수2의 값 보다 크거나 같으면 True
+[ ${변수1} -lt ${변수2} ]  # 변수1의 값이 변수2의 값 보다 작으면 True
+[ ${변수1} -le ${변수2} ]  # 변수1의 값이 변수2의 값 보다 작거나 같으면 True
+
+[ 조건A -a 조건B ]  #조건식 A와 B 모두가 참이면 Ture (&& 연산)
+[ 조건A -o 조건B ]  #조건식 A와 B 둘 중 1개만 참이라면 Ture (|| 연산)
+
+[ -d ${A} ] # A파일이 폴더이면 True
+[ -e ${A} ] # A파일이 존재하면 True
+[ -L ${A} ] # A파일이 심볼릭 링크로 되어 있으면 True
+[ -r ${A} ] # A파일이 읽기가 가능하면 True
+[ -w ${A} ] # A파일이 쓰기가 가능하면 True
+[ -x ${A} ] # A파일이 실행이 가능하면 True
+[ -s ${A} ] # A파일이 크기가 0보다 크면 True
+```
+
+#### 반복문
+```
+#!/bin/bash
+for 변수 in 범위
+do
+    수행로직
+done
+```
+```
+#!/bin/bash
+data= "1 2 3 4"
+for ((i=1; i<=4; i++)); do
+    echo $i
+done
+
+for x in $data
+do
+    echo ${x}
+done
+
+for x in $(seq 4)
+do
+    echo ${x}
+done
+
+datas=(1 2 3 4)
+for x in $datas
+do
+    echo ${x}
+done
+```
+
 ## File System Command
 #### ls -al: 숨김 파일(hidden file)도 포함한 상세 목록 나열하기
 #### pwd: 현재 작업 폴더(Directory) 보여주기
